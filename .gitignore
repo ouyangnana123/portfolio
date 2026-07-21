@@ -8,3 +8,10 @@ Desktop.ini
 .workbuddy/
 videos/bandicam*.mp4
 videos/把视频放这里.txt
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
