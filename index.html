@@ -932,11 +932,13 @@ dialog.video-dialog::backdrop{background:rgba(10,10,10,.62)}
     refreshState();
   }
 
-  /* 1) 加载已发布视频（videos.js 中的 HOSTED_VIDEOS 清单） */
+  /* 1) 加载已发布视频（videos.js 中的 HOSTED_VIDEOS 清单）
+     注：published 视频用 resolveVideoSrc() 解析，自动适配 GitHub Pages 子路径部署；
+         本地预览视频走 ObjectURL，不需要前缀处理 */
   var hosted = Array.isArray(window.HOSTED_VIDEOS) ? window.HOSTED_VIDEOS : [];
   hosted.forEach(function(v){
     buildCard({
-      url: v.src,
+      url: window.resolveVideoSrc ? window.resolveVideoSrc(v.src) : v.src,
       title: v.title || stripExt(v.src.split("/").pop()),
       desc: v.desc || "",
       ext: fmtExt(v.src),

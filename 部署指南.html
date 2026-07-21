@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>部署指南 · 陈哲豪作品集 → GitHub Pages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A0A0A; --black:#000; --paper:#F5F5F0; --white:#FFF;
+  --yellow:#FFD02F; --cyan:#A5F3FC; --pink:#FFB3D9; --lime:#C8FF5E; --violet:#C4B5FD;
+  --font-head:'Plus Jakarta Sans',sans-serif; --font-body:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  --bd:3px solid var(--black); --shadow:5px 5px 0 var(--black); --shadow-lg:8px 8px 0 var(--black);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);color:var(--ink);background:var(--paper);line-height:1.7;overflow-x:hidden}
+h1,h2,h3,h4{font-family:var(--font-head);font-weight:800;line-height:1.15;letter-spacing:-.01em}
+::selection{background:var(--yellow);color:var(--ink)}
+a{color:inherit}
+.mono{font-family:var(--font-mono)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* HERO */
+.hero{padding:5rem 0 3.5rem;border-bottom:var(--bd)}
+.hero .kicker{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--font-mono);font-weight:700;font-size:.8rem;
+  border:var(--bd);background:var(--yellow);box-shadow:4px 4px 0 var(--black);
+  padding:.4rem 1rem;margin-bottom:1.4rem;
+}
+.hero h1{font-size:clamp(2.2rem,6vw,3.6rem);text-transform:uppercase}
+.hero h1 .hl{background:var(--lime);border:var(--bd);box-shadow:var(--shadow);padding:0 .35em;display:inline-block}
+.hero p{margin-top:1.2rem;font-size:1.05rem;max-width:60ch;font-weight:500}
+.hero .result{
+  margin-top:2rem;display:inline-flex;align-items:center;gap:1rem;flex-wrap:wrap;
+  font-family:var(--font-mono);font-weight:700;
+  background:var(--white);border:var(--bd);box-shadow:var(--shadow);
+  padding:1rem 1.4rem;
+}
+.hero .result .arrow{font-size:1.4rem}
+
+/* TOC */
+.toc{
+  position:sticky;top:0;z-index:50;
+  background:var(--paper);border-bottom:var(--bd);
+  padding:.9rem 0;
+}
+.toc ul{display:flex;gap:.5rem;flex-wrap:wrap;list-style:none;justify-content:center}
+.toc a{
+  font-family:var(--font-mono);font-size:.78rem;font-weight:700;
+  text-decoration:none;padding:.35rem .7rem;border:2px solid var(--black);
+  background:var(--white);transition:background .12s,transform .12s;
+}
+.toc a:hover{background:var(--cyan);transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--black)}
+
+/* STEP */
+.step{padding:4rem 0;border-bottom:2px solid var(--black)}
+.step-head{display:flex;align-items:flex-start;gap:1.2rem;margin-bottom:2rem;flex-wrap:wrap}
+.step-num{
+  width:64px;height:64px;flex:none;display:grid;place-items:center;
+  font-family:var(--font-head);font-weight:800;font-size:2rem;
+  background:var(--yellow);border:var(--bd);box-shadow:var(--shadow);
+}
+.step-num.cyan{background:var(--cyan)}
+.step-num.pink{background:var(--pink)}
+.step-num.lime{background:var(--lime)}
+.step-num.violet{background:var(--violet)}
+.step-head h2{font-size:clamp(1.5rem,3.5vw,2.1rem);text-transform:uppercase;flex:1;min-width:240px}
+.step-head .tag{
+  font-family:var(--font-mono);font-size:.72rem;font-weight:700;
+  border:2px solid var(--black);background:var(--white);
+  padding:.25rem .65rem;align-self:center;
+}
+
+/* CARD */
+.card{
+  background:var(--white);border:var(--bd);box-shadow:var(--shadow);
+  padding:1.6rem 1.8rem;margin-bottom:1.4rem;
+}
+.card h3{font-size:1.15rem;margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem}
+.card .num-chip{
+  width:28px;height:28px;flex:none;display:grid;place-items:center;
+  font-family:var(--font-mono);font-weight:700;font-size:.85rem;
+  background:var(--ink);color:var(--paper);border:2px solid var(--black);
+}
+.card p{margin-bottom:.7rem}
+.card p:last-child{margin-bottom:0}
+.card ul{margin:.5rem 0 .5rem 1.4rem}
+.card li{margin-bottom:.35rem}
+
+/* CODE */
+.code{
+  background:var(--ink);color:var(--paper);
+  font-family:var(--font-mono);font-size:.85rem;line-height:1.55;
+  padding:1rem 1.2rem;border:var(--bd);
+  overflow-x:auto;margin:1rem 0;
+  position:relative;
+}
+.code .cmt{color:#8a8a7a}
+.code .ok{color:var(--lime)}
+.code .warn{color:var(--yellow)}
+.code .err{color:var(--pink)}
+.code .copy{
+  position:absolute;top:.5rem;right:.5rem;
+  font-family:var(--font-mono);font-size:.7rem;font-weight:700;
+  background:var(--white);color:var(--ink);border:2px solid var(--white);
+  padding:.25rem .6rem;cursor:pointer;
+}
+.code .copy:hover{background:var(--yellow)}
+
+/* MOCKUP - 模拟 GitHub UI */
+.mock{
+  border:var(--bd);background:var(--white);box-shadow:var(--shadow);
+  margin:1rem 0;overflow:hidden;
+}
+.mock-bar{
+  background:var(--ink);color:var(--paper);
+  padding:.6rem 1rem;font-family:var(--font-mono);font-size:.78rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.mock-bar .dot{width:10px;height:10px;border-radius:50%;background:var(--pink);display:inline-block}
+.mock-bar .dot.y{background:var(--yellow)}
+.mock-bar .dot.g{background:var(--lime)}
+.mock-bar .url{margin-left:auto;background:rgba(255,255,255,.1);padding:.15rem .5rem}
+.mock-body{padding:1.2rem 1.4rem;font-size:.85rem}
+.mock-row{display:flex;align-items:center;gap:.6rem;padding:.4rem 0;border-bottom:1px dashed #ccc}
+.mock-row:last-child{border-bottom:none}
+.mock-row .ico{width:18px;height:18px;background:var(--cyan);border:2px solid var(--black);flex:none}
+.mock-row .lbl{font-family:var(--font-mono);font-size:.8rem;font-weight:700}
+.mock-row .val{font-family:var(--font-mono);font-size:.78rem;color:#444;margin-left:auto}
+.mock-btn{
+  display:inline-block;font-family:var(--font-mono);font-size:.75rem;font-weight:700;
+  background:var(--lime);border:2px solid var(--black);padding:.25rem .65rem;margin-top:.5rem;
+}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.88rem}
+.tbl th,.tbl td{border:2px solid var(--black);padding:.55rem .75rem;text-align:left;vertical-align:top}
+.tbl th{background:var(--yellow);font-family:var(--font-mono);font-size:.78rem;text-transform:uppercase}
+.tbl tr:nth-child(even) td{background:var(--paper)}
+
+/* CALLOUT */
+.callout{
+  border:var(--bd);box-shadow:var(--shadow);padding:1.2rem 1.4rem;
+  margin:1.4rem 0;display:flex;gap:.9rem;align-items:flex-start;
+}
+.callout.warn{background:var(--pink)}
+.callout.tip{background:var(--cyan)}
+.callout.ok{background:var(--lime)}
+.callout .ico{font-size:1.6rem;flex:none;line-height:1}
+.callout strong{font-family:var(--font-head);text-transform:uppercase}
+
+/* FOOTER */
+.footer{
+  background:var(--black);color:var(--paper);padding:3rem 0 2rem;margin-top:2rem;
+}
+.footer h2{font-size:clamp(1.8rem,5vw,2.8rem);text-transform:uppercase;color:var(--paper);margin-bottom:1rem}
+.footer h2 .outline{color:transparent;-webkit-text-stroke:2px var(--paper)}
+.footer .mono{font-size:.8rem;opacity:.85}
+.footer a{color:var(--yellow);text-decoration:none}
+.footer a:hover{text-decoration:underline}
+
+/* Responsive */
+@media (max-width:680px){
+  .hero{padding:3rem 0 2.5rem}
+  .step{padding:2.8rem 0}
+  .toc{position:relative}
+  .toc ul{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">★ DEPLOY GUIDE — 2026</p>
+    <h1>把作品集<br><span class="hl">发布到公网</span>。</h1>
+    <p>从本地代码 → GitHub 仓库 → GitHub Pages 公开访问，4 步搞定。视频自动随网页一起部署，访客点击即播。</p>
+    <div class="result">
+      <span>本地</span>
+      <span style="font-size:1.4rem">→</span>
+      <span>github.com/ouyangnana123/portfolio</span>
+      <span style="font-size:1.4rem">→</span>
+      <span class="arrow">🌍</span>
+      <span>ouyangnana123.github.io/portfolio/</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOC ============ -->
+<nav class="toc" aria-label="步骤导航">
+  <div class="wrap">
+    <ul>
+      <li><a href="#step1">01 重命名仓库</a></li>
+      <li><a href="#step2">02 推送代码</a></li>
+      <li><a href="#step3">03 启用 Pages</a></li>
+      <li><a href="#step4">04 验证访问</a></li>
+      <li><a href="#video">视频路径原理</a></li>
+      <li><a href="#faq">常见问题</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ STEP 1 ============ -->
+<section class="step" id="step1">
+  <div class="wrap">
+    <div class="step-head">
+      <div class="step-num">01</div>
+      <h2>重命名 GitHub 仓库</h2>
+      <span class="tag">必做 · 1 分钟</span>
+    </div>
+
+    <div class="callout warn">
+      <span class="ico">⚠️</span>
+      <div>
+        <strong>为什么必须改？</strong>
+        <p>你的仓库名是 <code>-</code>（单个连字符），GitHub Pages URL 会变成 <code>https://ouyangnana123.github.io/-/</code>，URL 末尾的横杠既不专业，也可能被某些工具误判。改为 <code>portfolio</code> 后 URL 干净好记。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num-chip">1</span>在 GitHub 上重命名</h3>
+      <ul>
+        <li>打开 <a href="https://github.com/ouyangnana123/-/settings" target="_blank" rel="noopener">github.com/ouyangnana123/-/settings</a></li>
+        <li>顶部 <strong>Repository name</strong> 输入框 → 清空 → 输入 <code>portfolio</code></li>
+        <li>点击页面底部的绿色按钮 <strong>Rename</strong></li>
+      </ul>
+      <div class="mock">
+        <div class="mock-bar"><span class="dot"></span><span class="dot y"></span><span class="dot g"></span><span class="url">github.com/ouyangnana123/-/settings</span></div>
+        <div class="mock-body">
+          <div class="mock-row"><span class="ico"></span><span class="lbl">Repository name</span><span class="val">portfolio ✏️</span></div>
+          <div class="mock-row"><span class="ico" style="background:var(--lime)"></span><span class="lbl">Rename</span><span class="val">点击即生效</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num-chip">2</span>更新本地 remote 地址</h3>
+      <p>仓库改名后，本地 git 还指向旧地址，需要更新：</p>
+      <div class="code"><button class="copy" onclick="copyCode(this)">复制</button>git remote set-url origin https://github.com/ouyangnana123/portfolio.git
+git remote -v
+<span class="cmt"># 应该看到两行 origin 都指向 portfolio.git，不是 -.git</span></div>
+      <div class="callout tip">
+        <span class="ico">💡</span>
+        <div>
+          <strong>小知识</strong>
+          <p>GitHub 重命名后会自动设置旧 URL 的重定向，所以理论上不改 remote 短期也能 push。但建议立即改，避免日后混淆。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STEP 2 ============ -->
+<section class="step" id="step2" style="background:var(--white);border-left:0;border-right:0">
+  <div class="wrap">
+    <div class="step-head">
+      <div class="step-num cyan">02</div>
+      <h2>推送代码到 GitHub</h2>
+      <span class="tag">必做 · 30 秒</span>
+    </div>
+
+    <div class="card">
+      <h3><span class="num-chip">1</span>确认本地有未推送的改动</h3>
+      <p>我已经替你完成了代码改造（视频路径自适应 GitHub Pages 子路径），现在需要把改动推上去：</p>
+      <div class="code"><button class="copy" onclick="copyCode(this)">复制</button><span class="cmt"># 在项目根目录 D:\0毕设 下执行</span>
+git add .
+git commit -m <span class="ok">"适配 GitHub Pages 子路径部署"</span>
+git push -u origin main</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num-chip">2</span>验证推送成功</h3>
+      <p>打开 <a href="https://github.com/ouyangnana123/portfolio" target="_blank" rel="noopener">github.com/ouyangnana123/portfolio</a>，应该能看到：</p>
+      <ul>
+        <li><code>index.html</code> 在根目录</li>
+        <li><code>videos.js</code> 在根目录</li>
+        <li><code>videos/</code> 文件夹里有 <code>project-demo-2026-05-14.mp4</code>（4.1MB）</li>
+        <li>最新 commit 消息显示 <code>适配 GitHub Pages 子路径部署</code></li>
+      </ul>
+      <div class="callout warn">
+        <span class="ico">⚠️</span>
+        <div>
+          <strong>如果 push 报权限错误</strong>
+          <p>检查 git 凭据：Windows 控制面板 → 凭据管理器 → Windows 凭据 → 找到 <code>git:https://github.com</code> → 删除后重试 push，会弹出登录窗口。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STEP 3 ============ -->
+<section class="step" id="step3">
+  <div class="wrap">
+    <div class="step-head">
+      <div class="step-num pink">03</div>
+      <h2>启用 GitHub Pages</h2>
+      <span class="tag">必做 · 2 分钟</span>
+    </div>
+
+    <div class="card">
+      <h3><span class="num-chip">1</span>进入 Pages 设置</h3>
+      <ul>
+        <li>打开仓库 <code>https://github.com/ouyangnana123/portfolio</code></li>
+        <li>点击顶部 <strong>Settings</strong> 标签（不是仓库设置图标，是文字标签）</li>
+        <li>左侧菜单滚动到 <strong>Code &amp; automation</strong> 分组 → 点击 <strong>Pages</strong></li>
+      </ul>
+      <div class="mock">
+        <div class="mock-bar"><span class="dot"></span><span class="dot y"></span><span class="dot g"></span><span class="url">github.com/ouyangnana123/portfolio/settings/pages</span></div>
+        <div class="mock-body">
+          <div class="mock-row"><span class="ico" style="background:var(--violet)"></span><span class="lbl">Source</span><span class="val">Deploy from a branch ▾</span></div>
+          <div class="mock-row"><span class="ico" style="background:var(--lime)"></span><span class="lbl">Branch</span><span class="val">main ▾  / (root) ▾</span></div>
+          <div class="mock-row"><span class="ico"></span><span class="lbl">[Save]</span><span class="val">点击后开始构建</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num-chip">2</span>配置构建来源</h3>
+      <p>在 <strong>Build and deployment</strong> 区域：</p>
+      <table class="tbl">
+        <thead><tr><th>字段</th><th>选项</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Source</strong></td><td><code>Deploy from a branch</code></td><td>直接用 main 分支的代码做静态站点，无需构建</td></tr>
+          <tr><td><strong>Branch</strong></td><td><code>main</code></td><td>选主分支</td></tr>
+          <tr><td><strong>Folder</strong></td><td><code>/ (root)</code></td><td>根目录就是站点根</td></tr>
+        </tbody>
+      </table>
+      <p>点击 <strong>Save</strong>，页面顶部会出现黄色提示：</p>
+      <div class="code"><span class="warn">⏳ GitHub Pages is building your site...
+Please wait a few minutes, then refresh this page.</span></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num-chip">3</span>等待构建完成</h3>
+      <p>大约 <strong>1~2 分钟</strong>后刷新页面，顶部变成绿色：</p>
+      <div class="code"><span class="ok">✅ Your site is live at https://ouyangnana123.github.io/portfolio/</span></div>
+      <div class="callout ok">
+        <span class="ico">🎉</span>
+        <div>
+          <strong>大功告成！</strong>
+          <p>现在任何人打开 <code>https://ouyangnana123.github.io/portfolio/</code> 都能访问你的作品集了。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STEP 4 ============ -->
+<section class="step" id="step4" style="background:var(--white);border-left:0;border-right:0">
+  <div class="wrap">
+    <div class="step-head">
+      <div class="step-num lime">04</div>
+      <h2>验证访问与视频播放</h2>
+      <span class="tag">必做 · 1 分钟</span>
+    </div>
+
+    <div class="card">
+      <h3><span class="num-chip">1</span>用浏览器打开站点</h3>
+      <p>直接访问：</p>
+      <div class="code">https://ouyangnana123.github.io/portfolio/</div>
+      <p>应看到你的 Neo-Brutalism 风格作品集首页（陈哲豪 · Unity/VR 开发工程师）。</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num-chip">2</span>测试视频播放</h3>
+      <ol style="margin:.5rem 0 .5rem 1.4rem">
+        <li>点击导航栏的 <strong>「视频作品」</strong> 锚点</li>
+        <li>滚动到视频卡片，确认能看到视频缩略图（首帧画面）</li>
+        <li>点击卡片中央的 <strong>▶ 播放按钮</strong></li>
+        <li>确认弹窗弹出，视频自动开始播放</li>
+      </ol>
+      <div class="callout warn">
+        <span class="ico">⚠️</span>
+        <div>
+          <strong>如果视频播放 404</strong>
+          <p>按 F12 打开 DevTools → <strong>Network</strong> 面板 → 刷新页面 → 找到红色的 <code>.mp4</code> 请求 → 查看请求 URL 是否包含 <code>/portfolio/videos/</code> 前缀。如果只看到 <code>/videos/</code>（缺 <code>/portfolio</code>），说明缓存了旧版 videos.js，强制刷新（Ctrl+F5）。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num-chip">3</span>分享给朋友</h3>
+      <p>把这个链接发到任何地方，对方手机/电脑浏览器打开都能看：</p>
+      <div class="code"><span class="ok">https://ouyangnana123.github.io/portfolio/</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIDEO PATH ============ -->
+<section class="step" id="video">
+  <div class="wrap">
+    <div class="step-head">
+      <div class="step-num violet">VD</div>
+      <h2>视频路径自适应原理</h2>
+      <span class="tag">技术细节 · 可跳过</span>
+    </div>
+
+    <div class="card">
+      <h3>核心问题</h3>
+      <p>HTML 里写相对路径 <code>videos/xxx.mp4</code>，浏览器解析时会基于<strong>当前页面 URL 的目录</strong>来拼接：</p>
+      <table class="tbl">
+        <thead><tr><th>部署位置</th><th>页面 URL</th><th>相对路径解析结果</th><th>正确性</th></tr></thead>
+        <tbody>
+          <tr><td>GitHub Pages 子路径</td><td><code>/portfolio/</code></td><td><code>/portfolio/videos/xxx.mp4</code></td><td>✅ 正确</td></tr>
+          <tr><td>GitHub Pages 根目录</td><td><code>/</code></td><td><code>/videos/xxx.mp4</code></td><td>✅ 正确</td></tr>
+          <tr><td>本地 file://</td><td><code>D:/0毕设/</code></td><td><code>D:/0毕设/videos/xxx.mp4</code></td><td>✅ 正确</td></tr>
+        </tbody>
+      </table>
+      <p>大多数情况下相对路径就够用。但为了<strong>极端场景下的稳健性</strong>，我在 <code>videos.js</code> 顶部加了 <code>SITE_PREFIX</code> 与 <code>resolveVideoSrc()</code>：</p>
+      <div class="code"><button class="copy" onclick="copyCode(this)">复制</button><span class="cmt">// 自动检测部署路径前缀</span>
+window.SITE_PREFIX = (function () {
+  var p = window.location.pathname;
+  var lastSlash = p.lastIndexOf(<span class="ok">"/"</span>);
+  <span class="ok">if</span> (lastSlash &gt;= 0 &amp;&amp; /\.[a-z0-9]+$/i.test(p.slice(lastSlash + 1))) {
+    p = p.slice(0, lastSlash);   <span class="cmt">// 去掉文件名</span>
+  }
+  <span class="ok">if</span> (p.length &gt; 0 &amp;&amp; p.charAt(p.length - 1) === <span class="ok">"/"</span>) {
+    p = p.slice(0, -1);          <span class="cmt">// 去掉结尾斜杠</span>
+  }
+  <span class="ok">return</span> p || <span class="ok">""</span>;            <span class="cmt">// 根目录返回 ""，子路径返回 "/portfolio"</span>
+})();
+
+<span class="cmt">// 把相对路径解析成带前缀的绝对路径</span>
+window.resolveVideoSrc = function (src) {
+  <span class="ok">if</span> (/^(https?:|data:|blob:)/i.test(src)) <span class="ok">return</span> src;  <span class="cmt">// 已是绝对 URL</span>
+  <span class="ok">if</span> (src.charAt(0) === <span class="ok">"/"</span>) <span class="ok">return</span> src;             <span class="cmt">// 已带绝对路径</span>
+  <span class="ok">return</span> window.SITE_PREFIX + <span class="ok">"/"</span> + src;             <span class="cmt">// 拼前缀</span>
+};</div>
+      <p>这样无论部署到哪个路径，<code>HOSTED_VIDEOS</code> 里的相对路径写法都一样，<code>index.html</code> 渲染视频时会自动调用 <code>resolveVideoSrc()</code> 解析。</p>
+    </div>
+
+    <div class="card">
+      <h3>添加新视频的流程</h3>
+      <div class="code"><button class="copy" onclick="copyCode(this)">复制</button><span class="cmt"># 1. 把新视频放进 videos/ 文件夹</span>
+<span class="cmt">#    （建议 ≤ 25MB，文件名英文小写，如 campus-tour.mp4）</span>
+
+<span class="cmt"># 2. 编辑 videos.js，在 HOSTED_VIDEOS 数组里加一条</span>
+window.HOSTED_VIDEOS = [
+  { src: <span class="ok">"videos/project-demo-2026-05-14.mp4"</span>, title: <span class="ok">"..."</span>, desc: <span class="ok">"..."</span> },
+  { src: <span class="ok">"videos/campus-tour.mp4"</span>, title: <span class="ok">"校园游览"</span>, desc: <span class="ok">"..."</span> }   <span class="cmt"># ← 新增</span>
+];
+
+<span class="cmt"># 3. 提交并推送</span>
+git add .
+git commit -m <span class="ok">"add campus-tour video"</span>
+git push
+
+<span class="cmt"># 4. 等 1~2 分钟，刷新网页即可看到新视频</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="step" id="faq" style="background:var(--white);border-left:0;border-right:0">
+  <div class="wrap">
+    <div class="step-head">
+      <div class="step-num">FAQ</div>
+      <h2>常见问题</h2>
+    </div>
+
+    <div class="card">
+      <h3>Q1: 推送后网页没更新？</h3>
+      <p>GitHub Pages 有 1~2 分钟构建延迟。检查仓库 → <strong>Actions</strong> 标签，看是否有名为 <code>pages-build-deployment</code> 的 workflow 正在跑。绿色对勾代表构建完成。</p>
+    </div>
+
+    <div class="card">
+      <h3>Q2: 视频在国内加载很慢？</h3>
+      <p>GitHub Pages 服务器在国外，国内访问确实慢。两个替代方案：</p>
+      <ul>
+        <li><strong>方案 A：</strong>把视频上传到 B 站，HTML 里改用 <code>&lt;iframe&gt;</code> 嵌入 B 站播放器</li>
+        <li><strong>方案 B：</strong>改用 <a href="https://pages.cloudflare.com" target="_blank" rel="noopener">Cloudflare Pages</a> 部署，全球 CDN 加速，但单文件 25MB 上限</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Q3: 能用自己的域名吗？</h3>
+      <p>可以。仓库 → Settings → Pages → Custom domain → 输入你的域名 → Save。然后在域名服务商处加 CNAME 记录指向 <code>ouyangnana123.github.io</code>，再勾选 <strong>Enforce HTTPS</strong>。</p>
+    </div>
+
+    <div class="card">
+      <h3>Q4: 想更新简历内容怎么改？</h3>
+      <p>所有简历内容（个人简介、教育、实习、项目、技能）都在 <code>index.html</code> 里，直接用任何编辑器（VS Code / Notepad）打开修改文字，然后：</p>
+      <div class="code">git add . &amp;&amp; git commit -m <span class="ok">"update resume"</span> &amp;&amp; git push</div>
+    </div>
+
+    <div class="card">
+      <h3>Q5: 仓库要不要设为 Public？</h3>
+      <p><strong>GitHub Pages 免费版要求仓库必须 Public</strong>。免费账号下的 Private 仓库无法启用 Pages。如果你不希望代码公开，可以：</p>
+      <ul>
+        <li>升级 GitHub Pro（$4/月）→ Private 仓库也能用 Pages</li>
+        <li>或改用 Cloudflare Pages（支持 Private 仓库且免费）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <h2>有问题？<br><span class="outline">RTFM →</span></h2>
+    <p class="mono">本指南与作品集同一仓库，源文件：<code>部署指南.html</code></p>
+    <p class="mono" style="margin-top:.5rem">完整文档：<code>README.md</code> · 视频清单：<code>videos.js</code></p>
+    <p class="mono" style="margin-top:1rem">© 2026 陈哲豪 · 部署指南</p>
+  </div>
+</footer>
+
+<script>
+function copyCode(btn){
+  var code = btn.parentNode.cloneNode(true);
+  var btns = code.querySelectorAll('button');
+  btns.forEach(function(b){b.remove()});
+  var text = code.textContent.trim();
+  navigator.clipboard.writeText(text).then(function(){
+    btn.textContent = '✓ 已复制';
+    setTimeout(function(){btn.textContent = '复制'}, 1500);
+  });
+}
+</script>
+</body>
+</html>
