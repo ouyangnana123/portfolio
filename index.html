@@ -399,8 +399,37 @@ dialog.video-dialog::backdrop{background:rgba(10,10,10,.62)}
 }
 .dialog-close:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--black)}
 .dialog-close:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--black)}
-.dialog-video{width:100%;max-height:62vh;background:var(--ink)}
+.dialog-video{width:100%;max-height:62vh;background:var(--ink);display:block}
 .dialog-desc{padding:1rem 1.2rem;font-size:.9rem;border-top:var(--bd)}
+
+/* B 站视频缩略图占位（无首帧预览时的占位图） */
+.video-thumb--bili{
+  background:var(--ink);
+  display:grid;place-items:center;
+  position:relative;overflow:hidden;
+}
+.video-thumb--bili .bili-pattern{
+  position:absolute;inset:0;opacity:.18;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23F5F5F0'/%3E%3Cpath d='M8 12 L32 12 L32 28 L8 28 Z M14 16 L14 24 L22 20 Z' fill='%23FFB3D9'/%3E%3C/svg%3E");
+}
+.video-thumb--bili .bili-badge{
+  position:relative;z-index:1;
+  font-family:var(--font-mono);font-weight:700;font-size:1.1rem;
+  background:var(--pink);color:var(--ink);
+  border:3px solid var(--black);box-shadow:4px 4px 0 var(--black);
+  padding:.35rem .9rem;letter-spacing:.05em;
+}
+.video-thumb--bili .bili-id{
+  position:relative;z-index:1;margin-top:.7rem;
+  font-family:var(--font-mono);font-size:.78rem;font-weight:500;
+  color:var(--paper);opacity:.85;
+}
+
+/* B 站 iframe 播放器（弹窗内） */
+.dialog-iframe{
+  width:100%;aspect-ratio:16/9;max-height:62vh;
+  border:none;background:var(--ink);display:block;
+}
 
 /* ============ 页脚 ============ */
 .site-footer{
@@ -766,7 +795,7 @@ dialog.video-dialog::backdrop{background:rgba(10,10,10,.62)}
     <h3 id="dialogTitle">视频标题</h3>
     <button class="dialog-close" id="dialogClose" aria-label="关闭播放窗口">✕</button>
   </div>
-  <video class="dialog-video" id="dialogVideo" controls playsinline></video>
+  <div id="dialogMediaWrap"></div>
   <p class="dialog-desc" id="dialogDesc"></p>
 </dialog>
 
@@ -816,7 +845,7 @@ dialog.video-dialog::backdrop{background:rgba(10,10,10,.62)}
   var emptyState = document.getElementById("emptyState");
   var countLabel = document.getElementById("worksCount");
   var dialog     = document.getElementById("videoDialog");
-  var dlgVideo   = document.getElementById("dialogVideo");
+  var dlgMediaWrap = document.getElementById("dialogMediaWrap");
   var dlgTitle   = document.getElementById("dialogTitle");
   var dlgDesc    = document.getElementById("dialogDesc");
   var dlgClose   = document.getElementById("dialogClose");
@@ -848,12 +877,32 @@ dialog.video-dialog::backdrop{background:rgba(10,10,10,.62)}
 
     var thumb = document.createElement("div");
     thumb.className = "video-thumb";
-    var preview = document.createElement("video");
-    preview.src = opts.url;
-    preview.muted = true;
-    preview.preload = "metadata";
-    preview.setAttribute("aria-hidden", "true");
-    thumb.appendChild(preview);
+    var isBili = window.isBilibiliVideo && window.isBilibiliVideo(opts.url);
+    var preview;  /* 仅本地视频有值 */
+
+    if (isBili) {
+      /* B 站视频：占位缩略图（无法直接获取首帧） */
+      thumb.classList.add("video-thumb--bili");
+      var pattern = document.createElement("div");
+      pattern.className = "bili-pattern";
+      thumb.appendChild(pattern);
+      var badge = document.createElement("div");
+      badge.className = "bili-badge";
+      badge.textContent = "B站";
+      thumb.appendChild(badge);
+      var biliIdEl = document.createElement("div");
+      biliIdEl.className = "bili-id";
+      biliIdEl.textContent = window.getBilibiliId(opts.url);
+      thumb.appendChild(biliIdEl);
+    } else {
+      /* 本地视频：video 标签预览首帧 */
+      preview = document.createElement("video");
+      preview.src = opts.url;
+      preview.muted = true;
+      preview.preload = "metadata";
+      preview.setAttribute("aria-hidden", "true");
+      thumb.appendChild(preview);
+    }
 
     var info = document.createElement("div");
     info.className = "video-info";
@@ -883,13 +932,17 @@ dialog.video-dialog::backdrop{background:rgba(10,10,10,.62)}
       tags.appendChild(t4);
     }
 
-    preview.addEventListener("loadedmetadata", function(){
-      var s = Math.round(preview.duration);
-      if (isFinite(s)) {
-        var m = Math.floor(s/60), sec = s%60;
-        t3.textContent = m + ":" + (sec < 10 ? "0" : "") + sec;
-      }
-    });
+    if (!isBili && preview) {
+      preview.addEventListener("loadedmetadata", function(){
+        var s = Math.round(preview.duration);
+        if (isFinite(s)) {
+          var m = Math.floor(s/60), sec = s%60;
+          t3.textContent = m + ":" + (sec < 10 ? "0" : "") + sec;
+        }
+      });
+    } else if (isBili) {
+      t3.textContent = "B站";
+    }
 
     if (opts.deletable) {
       var del = document.createElement("button");
@@ -917,11 +970,22 @@ dialog.video-dialog::backdrop{background:rgba(10,10,10,.62)}
     playBtn.addEventListener("click", function(){
       dlgTitle.textContent = h3.textContent;
       dlgDesc.textContent = p.textContent;
-      dlgVideo.src = opts.url;
-      if (typeof dialog.showModal === "function") {
-        dialog.showModal();
-        var pr = dlgVideo.play();
-        if (pr && pr.catch) pr.catch(function(){});
+      if (isBili) {
+        /* B 站视频：iframe 嵌入播放器 */
+        var embedUrl = window.getBilibiliEmbedUrl(opts.url, true);
+        dlgMediaWrap.innerHTML = '<iframe class="dialog-iframe" src="' + embedUrl +
+          '" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen="allowfullscreen" referrerpolicy="no-referrer"></iframe>';
+        if (typeof dialog.showModal === "function") dialog.showModal();
+      } else {
+        /* 本地视频：video 标签 */
+        dlgMediaWrap.innerHTML = '<video class="dialog-video" controls playsinline></video>';
+        var v = dlgMediaWrap.querySelector("video");
+        v.src = opts.url;
+        if (typeof dialog.showModal === "function") {
+          dialog.showModal();
+          var pr = v.play();
+          if (pr && pr.catch) pr.catch(function(){});
+        }
       }
     });
 
@@ -933,15 +997,16 @@ dialog.video-dialog::backdrop{background:rgba(10,10,10,.62)}
   }
 
   /* 1) 加载已发布视频（videos.js 中的 HOSTED_VIDEOS 清单）
-     注：published 视频用 resolveVideoSrc() 解析，自动适配 GitHub Pages 子路径部署；
-         本地预览视频走 ObjectURL，不需要前缀处理 */
+     - 本地视频用 resolveVideoSrc() 解析，自动适配 GitHub Pages 子路径部署
+     - B 站视频（bilibili:BV号）不经路径解析，直接传入 */
   var hosted = Array.isArray(window.HOSTED_VIDEOS) ? window.HOSTED_VIDEOS : [];
   hosted.forEach(function(v){
+    var isBili = window.isBilibiliVideo && window.isBilibiliVideo(v.src);
     buildCard({
-      url: window.resolveVideoSrc ? window.resolveVideoSrc(v.src) : v.src,
+      url: isBili ? v.src : (window.resolveVideoSrc ? window.resolveVideoSrc(v.src) : v.src),
       title: v.title || stripExt(v.src.split("/").pop()),
       desc: v.desc || "",
-      ext: fmtExt(v.src),
+      ext: isBili ? "B站" : fmtExt(v.src),
       sizeText: "",
       published: true,
       deletable: false
@@ -988,21 +1053,17 @@ dialog.video-dialog::backdrop{background:rgba(10,10,10,.62)}
     }
   });
 
-  // 弹窗关闭
+  // 弹窗关闭（清空容器即可移除 video/iframe，停止播放）
   function closeDialog(){
-    dlgVideo.pause();
-    dlgVideo.removeAttribute("src");
-    dlgVideo.load();
+    dlgMediaWrap.innerHTML = "";
     dialog.close();
   }
   dlgClose.addEventListener("click", closeDialog);
   dialog.addEventListener("click", function(e){
     if (e.target === dialog) closeDialog();   // 点击背板关闭
   });
-  dialog.addEventListener("cancel", function(){  // Esc 关闭时同样停掉视频
-    dlgVideo.pause();
-    dlgVideo.removeAttribute("src");
-    dlgVideo.load();
+  dialog.addEventListener("cancel", function(){  // Esc 关闭时同样清空
+    dlgMediaWrap.innerHTML = "";
   });
 
   refreshState();

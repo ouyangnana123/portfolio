@@ -44,10 +44,48 @@ window.resolveVideoSrc = function (src) {
   return window.SITE_PREFIX + "/" + src;
 };
 
+/* ============================================================
+ * B 站视频嵌入支持
+ * 当视频超过 25MB 时，上传到 B 站，然后在 HOSTED_VIDEOS 里
+ * 用 "bilibili:BV号" 作为 src，页面会自动渲染 iframe 播放器
+ * ============================================================ */
+
+/* 判断是否为 B 站视频 */
+window.isBilibiliVideo = function (src) {
+  return /^bilibili:/i.test(src);
+};
+
+/* 提取 B 站视频 ID（BV 号） */
+window.getBilibiliId = function (src) {
+  return src.replace(/^bilibili:/i, "").trim();
+};
+
+/* 生成 B 站嵌入播放器 URL */
+window.getBilibiliEmbedUrl = function (src, autoplay) {
+  var bvid = window.getBilibiliId(src);
+  var url = "//player.bilibili.com/player.html?bvid=" + bvid +
+            "&page=1&high_quality=1&danmaku=0";
+  if (autoplay) url += "&autoplay=1";
+  return url;
+};
+
 window.HOSTED_VIDEOS = [
   {
     src: "videos/project-demo-2026-05-14.mp4",
     title: "项目演示视频 2026-05-14",
     desc: "项目实操演示（由 Bandicam 录制）。如需替换标题或简介，直接修改这里即可。"
   }
+  /* ── B 站视频示例（取消注释即可使用）──
+   * 操作流程：
+   *   1. 把大视频上传到 B 站（https://member.bilibili.com/platform/upload）
+   *   2. 发布后在视频页地址栏找到 BV 号，如 BV1xx411c7mD
+   *   3. 在下面加一条，src 写 "bilibili:BV号"
+   *   4. git push，访客点击卡片即弹窗播放 B 站嵌入播放器
+   *
+   * {
+   *   src: "bilibili:BV1xx411c7mD",
+   *   title: "大视频演示（B 站）",
+   *   desc: "这个视频超过 25MB，已上传到 B 站。点击播放会加载 B 站播放器。"
+   * }
+   */
 ];
