@@ -1,0 +1,8 @@
+# 系统与临时文件
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.tmp
+
+# WorkBuddy 工作区记忆（不上传）
+.workbuddy/

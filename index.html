@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>陈哲豪 · 个人作品集 — Unity / VR 开发工程师</title>
+<meta name="description" content="陈哲豪的个人作品集：Unity 开发工程师 / VR 开发。简历、项目经历与视频作品展示。">
+
+<!-- Google Fonts: 标题 Plus Jakarta Sans ExtraBold / 正文 Inter / 标签 JetBrains Mono -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============ 基础变量与重置 ============ */
+:root{
+  --ink:#0A0A0A;          /* 近黑文字 */
+  --black:#000000;        /* 纯黑边框/阴影 */
+  --paper:#F5F5F0;        /* 页面底色 */
+  --white:#FFFFFF;
+  --yellow:#FFD02F;
+  --cyan:#A5F3FC;
+  --pink:#FFB3D9;
+  --lime:#C8FF5E;
+  --violet:#C4B5FD;
+  --font-head:'Plus Jakarta Sans',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --bd:3px solid var(--black);
+  --shadow:5px 5px 0 var(--black);
+  --shadow-lg:8px 8px 0 var(--black);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  color:var(--ink);
+  background:var(--paper);
+  line-height:1.65;
+  overflow-x:hidden;
+}
+/* 全局 SVG 噪点纹理（内联 data-URI，无模糊无渐变） */
+body::after{
+  content:"";
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:2000;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+}
+img,video{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3,h4{font-family:var(--font-head);font-weight:800;line-height:1.15;letter-spacing:-.01em}
+::selection{background:var(--yellow);color:var(--ink)}
+
+/* 键盘焦点可见性 */
+:focus{outline:none}
+:focus-visible{
+  outline:3px solid var(--ink);
+  outline-offset:3px;
+  box-shadow:0 0 0 6px var(--yellow);
+}
+
+/* 跳转链接（键盘可达） */
+.skip-link{
+  position:fixed;top:-60px;left:16px;z-index:3000;
+  font-family:var(--font-mono);font-size:.85rem;
+  background:var(--yellow);border:var(--bd);padding:.5rem 1rem;
+  box-shadow:var(--shadow);text-decoration:none;
+  transition:top .15s;
+}
+.skip-link:focus-visible{top:12px}
+
+/* 顶部滚动进度条 */
+#progress{
+  position:fixed;top:0;left:0;height:6px;width:0;
+  background:var(--black);
+  z-index:1500;
+}
+
+/* ============ 通用组件 ============ */
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--font-mono)}
+
+.card{
+  background:var(--white);
+  border:var(--bd);
+  box-shadow:var(--shadow);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.card:hover{
+  transform:translate(-3px,-3px);
+  box-shadow:var(--shadow-lg);
+}
+
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--font-mono);font-weight:700;font-size:.9rem;
+  color:var(--ink);background:var(--white);
+  border:var(--bd);box-shadow:var(--shadow);
+  padding:.7rem 1.3rem;cursor:pointer;text-decoration:none;
+  transition:transform .1s ease,box-shadow .1s ease,background .15s;
+  user-select:none;
+}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--black)}
+.btn:active{transform:translate(5px,5px);box-shadow:0 0 0 var(--black)}  /* 物理按压 */
+.btn--yellow{background:var(--yellow)}
+.btn--cyan{background:var(--cyan)}
+.btn--lime{background:var(--lime)}
+
+.tag{
+  display:inline-block;
+  font-family:var(--font-mono);font-size:.72rem;font-weight:500;
+  border:2px solid var(--black);
+  padding:.15rem .55rem;
+  background:var(--white);
+  letter-spacing:.02em;
+}
+
+/* 区块标题：斜条纹装饰条 + 序号 + 大标题 */
+.section-head{margin-bottom:2.4rem}
+.section-head .kicker{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:var(--font-mono);font-size:.8rem;font-weight:700;
+  border:var(--bd);background:var(--white);box-shadow:4px 4px 0 var(--black);
+  padding:.3rem .9rem;margin-bottom:1rem;
+}
+.section-head h2{font-size:clamp(1.9rem,4.5vw,3rem);text-transform:uppercase}
+.stripe-bar{
+  height:16px;width:min(280px,60%);
+  border:var(--bd);margin-top:.9rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Crect width='14' height='14' fill='%23FFD02F'/%3E%3Cpath d='M-3.5 3.5 L3.5 -3.5 M0 14 L14 0 M10.5 17.5 L17.5 10.5' stroke='%230A0A0A' stroke-width='2.5'/%3E%3C/svg%3E");
+}
+.stripe-bar--cyan{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Crect width='14' height='14' fill='%23A5F3FC'/%3E%3Cpath d='M-3.5 3.5 L3.5 -3.5 M0 14 L14 0 M10.5 17.5 L17.5 10.5' stroke='%230A0A0A' stroke-width='2.5'/%3E%3C/svg%3E")}
+
+/* 圆点矩阵装饰 */
+.dots{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Ccircle cx='3' cy='3' r='2' fill='%230A0A0A'/%3E%3C/svg%3E");
+}
+
+/* 滚动揭示动画 */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .55s ease,transform .55s cubic-bezier(.2,.7,.25,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============ 顶部导航 ============ */
+.site-header{
+  position:sticky;top:0;z-index:1000;
+  background:var(--paper);
+  border-bottom:var(--bd);
+}
+.site-header .wrap{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;padding-top:.8rem;padding-bottom:.8rem;
+}
+.logo{
+  font-family:var(--font-head);font-size:1.05rem;font-weight:800;
+  text-decoration:none;display:flex;align-items:center;gap:.55rem;
+}
+.logo-mark{
+  width:26px;height:26px;flex:none;
+  background:var(--yellow);border:var(--bd);
+  box-shadow:3px 3px 0 var(--black);
+}
+.site-nav ul{display:flex;list-style:none;gap:.4rem;flex-wrap:wrap}
+.site-nav a{
+  font-family:var(--font-mono);font-size:.82rem;font-weight:700;
+  text-decoration:none;padding:.4rem .8rem;
+  border:2px solid transparent;
+  transition:background .12s,border-color .12s;
+}
+.site-nav a:hover{background:var(--yellow);border-color:var(--black)}
+
+/* ============ Hero ============ */
+.hero{position:relative;padding:5.5rem 0 4.5rem;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.35fr .9fr;gap:3rem;align-items:center}
+.hero h1{font-size:clamp(2.4rem,6vw,4.4rem);text-transform:uppercase}
+.hero h1 .hl{
+  background:var(--yellow);border:var(--bd);
+  box-shadow:var(--shadow);
+  padding:0 .35em;display:inline-block;
+}
+.hero .sub{
+  margin:1.4rem 0 2rem;max-width:48ch;
+  font-size:1.05rem;font-weight:500;
+}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-deco{position:relative;min-height:320px}
+.deco-box{
+  position:absolute;border:var(--bd);box-shadow:var(--shadow);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.deco-box:hover{transform:translate(-3px,-3px) rotate(-2deg);box-shadow:var(--shadow-lg)}
+.deco-1{width:190px;height:190px;top:6%;left:8%;background:var(--cyan)}
+.deco-2{width:130px;height:130px;top:44%;right:4%;background:var(--pink)}
+.deco-3{width:96px;height:96px;bottom:0;left:26%;background:var(--lime)}
+.deco-star{position:absolute;top:0;right:18%;width:72px;animation:spin 14s linear infinite}
+.deco-dots{position:absolute;bottom:8%;right:22%;width:130px;height:76px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero-hello{
+  position:absolute;top:38%;left:14%;
+  font-family:var(--font-mono);font-weight:700;font-size:.95rem;
+  background:var(--white);border:var(--bd);box-shadow:var(--shadow);
+  padding:.5rem .9rem;transform:rotate(-4deg);
+}
+
+/* 跑马灯分隔带 */
+.marquee{
+  border-top:var(--bd);border-bottom:var(--bd);
+  background:var(--black);color:var(--paper);
+  overflow:hidden;white-space:nowrap;
+  padding:.65rem 0;
+}
+.marquee-track{
+  display:inline-block;
+  font-family:var(--font-mono);font-weight:700;font-size:.95rem;
+  letter-spacing:.12em;
+  animation:marquee 22s linear infinite;
+}
+.marquee-track span{margin:0 1.4rem}
+.marquee-track .accent{color:var(--yellow)}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* ============ 简历区 ============ */
+.section{padding:5rem 0}
+.resume-grid{
+  display:grid;gap:1.6rem;
+  grid-template-columns:repeat(2,1fr);
+}
+.resume-card{padding:1.8rem;position:relative}
+.resume-card--wide{grid-column:1/-1}
+.resume-card h3{
+  font-size:1.25rem;text-transform:uppercase;
+  display:flex;align-items:center;gap:.7rem;
+  margin-bottom:1.1rem;
+}
+.card-chip{
+  width:34px;height:34px;flex:none;
+  display:grid;place-items:center;
+  border:var(--bd);box-shadow:3px 3px 0 var(--black);
+}
+.card-chip svg{width:18px;height:18px}
+.resume-card .corner-dots{
+  position:absolute;top:10px;right:10px;width:54px;height:36px;opacity:.55;
+}
+
+/* 简介卡 */
+.about-card{display:flex;gap:1.6rem;align-items:flex-start;background:var(--white)}
+.avatar{
+  width:118px;height:118px;flex:none;
+  border:var(--bd);box-shadow:var(--shadow);
+  background:var(--violet);
+  display:grid;place-items:center;
+}
+.about-facts{
+  margin-top:1.1rem;display:flex;gap:.5rem;flex-wrap:wrap;
+}
+
+/* 时间线（教育 / 工作 / 项目） */
+.timeline{list-style:none;display:flex;flex-direction:column;gap:1.1rem}
+.timeline li{
+  border:var(--bd);background:var(--paper);
+  padding:.9rem 1.1rem;position:relative;
+  box-shadow:4px 4px 0 var(--black);
+}
+.timeline .date{
+  font-family:var(--font-mono);font-size:.72rem;font-weight:700;
+  background:var(--ink);color:var(--paper);
+  display:inline-block;padding:.1rem .5rem;margin-bottom:.45rem;
+}
+.timeline h4{font-size:1rem;margin-bottom:.15rem}
+.timeline h4 .role{
+  font-family:var(--font-mono);font-size:.7rem;font-weight:700;
+  background:var(--yellow);border:2px solid var(--black);
+  padding:.05rem .45rem;margin-left:.4rem;vertical-align:middle;
+}
+.timeline p{font-size:.9rem;color:#333}
+.timeline p + p{margin-top:.35rem}
+.timeline li::before{
+  content:"";position:absolute;left:-3px;top:-3px;width:10px;height:10px;
+  background:var(--yellow);border:2px solid var(--black);
+}
+
+/* 技能卡 */
+.skills-card{background:var(--white)}
+.skill-group{margin-bottom:1.2rem}
+.skill-group:last-child{margin-bottom:0}
+.skill-group h4{
+  font-family:var(--font-mono);font-size:.78rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;margin-bottom:.55rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.skill-group h4::before{content:"";width:12px;height:12px;background:var(--pink);border:2px solid var(--black)}
+.skill-group:nth-child(2) h4::before{background:var(--cyan)}
+.skill-group:nth-child(3) h4::before{background:var(--lime)}
+.skill-group:nth-child(4) h4::before{background:var(--yellow)}
+.skill-tags{display:flex;flex-wrap:wrap;gap:.5rem}
+.skill-tags .tag{
+  font-size:.78rem;font-weight:700;padding:.3rem .7rem;
+  box-shadow:3px 3px 0 var(--black);
+  transition:transform .12s,box-shadow .12s;
+}
+.skill-tags .tag:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--black);background:var(--yellow)}
+
+/* ============ 视频作品区 ============ */
+.works-section{background:var(--white);border-top:var(--bd);border-bottom:var(--bd)}
+.upload-panel{
+  border:3px dashed var(--black);
+  background:var(--paper);
+  box-shadow:var(--shadow);
+  padding:2.2rem;text-align:center;
+  margin-bottom:2.4rem;
+  transition:background .15s,transform .15s;
+}
+.upload-panel.dragover{background:var(--lime);transform:translate(-2px,-2px)}
+.upload-panel .up-title{font-family:var(--font-head);font-size:1.3rem;margin:.9rem 0 .3rem}
+.upload-panel .up-hint{font-family:var(--font-mono);font-size:.78rem;color:#444;margin-bottom:1.3rem}
+.upload-icon{
+  width:64px;height:64px;margin:0 auto;
+  border:var(--bd);background:var(--yellow);box-shadow:4px 4px 0 var(--black);
+  display:grid;place-items:center;
+}
+#videoInput{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;clip:rect(0 0 0 0)}
+.works-meta{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:1rem;flex-wrap:wrap;margin-bottom:1.4rem;
+}
+.works-count{
+  font-family:var(--font-mono);font-size:.8rem;font-weight:700;
+  border:var(--bd);background:var(--cyan);box-shadow:3px 3px 0 var(--black);
+  padding:.3rem .8rem;
+}
+.video-grid{
+  display:grid;gap:1.8rem;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+}
+.video-card{display:flex;flex-direction:column;overflow:hidden}
+.video-thumb{
+  position:relative;aspect-ratio:16/9;
+  border-bottom:var(--bd);
+  background:var(--ink);
+}
+.video-thumb video{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.play-btn{
+  position:absolute;inset:0;width:100%;
+  background:transparent;border:none;cursor:pointer;
+  display:grid;place-items:center;
+}
+.play-btn .play-face{
+  width:66px;height:66px;
+  background:var(--yellow);border:var(--bd);
+  box-shadow:4px 4px 0 var(--black);
+  display:grid;place-items:center;
+  transition:transform .12s,box-shadow .12s,background .12s;
+}
+.play-btn:hover .play-face{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--black);background:var(--lime)}
+.play-btn:active .play-face{transform:translate(4px,4px);box-shadow:0 0 0 var(--black)}
+.video-info{padding:1.2rem 1.3rem 1.4rem;position:relative;flex:1}
+.video-info h3{
+  font-size:1.05rem;margin-bottom:.35rem;
+  padding-right:2.2rem;
+}
+.video-info p{font-size:.87rem;color:#3a3a3a}
+.video-info [contenteditable]:hover{outline:2px dashed #999;outline-offset:2px}
+.video-info [contenteditable]:focus{outline:2px dashed var(--black);outline-offset:2px;background:var(--paper)}
+.video-tags{margin-top:.9rem;display:flex;gap:.45rem;flex-wrap:wrap}
+.del-btn{
+  position:absolute;top:.85rem;right:.85rem;
+  width:30px;height:30px;
+  font-family:var(--font-mono);font-weight:700;font-size:.9rem;line-height:1;
+  background:var(--pink);border:2px solid var(--black);
+  box-shadow:3px 3px 0 var(--black);cursor:pointer;
+  transition:transform .1s,box-shadow .1s;
+}
+.del-btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--black)}
+.del-btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--black)}
+.empty-state{
+  border:3px dashed var(--black);
+  padding:3rem 2rem;text-align:center;
+  background:var(--paper);
+}
+.empty-state .mono{font-size:.85rem;color:#555}
+
+/* 视频弹窗（原生 dialog） */
+dialog.video-dialog{
+  border:var(--bd);box-shadow:10px 10px 0 var(--black);
+  padding:0;max-width:min(860px,92vw);width:100%;
+  background:var(--white);
+}
+dialog.video-dialog::backdrop{background:rgba(10,10,10,.62)}
+.dialog-head{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  border-bottom:var(--bd);padding:.85rem 1.1rem;background:var(--yellow);
+}
+.dialog-head h3{font-size:1.05rem}
+.dialog-close{
+  width:34px;height:34px;flex:none;
+  font-family:var(--font-mono);font-weight:700;font-size:1rem;
+  background:var(--white);border:var(--bd);box-shadow:3px 3px 0 var(--black);
+  cursor:pointer;transition:transform .1s,box-shadow .1s;
+}
+.dialog-close:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--black)}
+.dialog-close:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--black)}
+.dialog-video{width:100%;max-height:62vh;background:var(--ink)}
+.dialog-desc{padding:1rem 1.2rem;font-size:.9rem;border-top:var(--bd)}
+
+/* ============ 页脚 ============ */
+.site-footer{
+  background:var(--black);color:var(--paper);
+  padding:4rem 0 2.2rem;
+  position:relative;
+}
+.footer-title{
+  font-size:clamp(2rem,6vw,3.6rem);text-transform:uppercase;
+  color:var(--paper);margin-bottom:1.6rem;
+}
+.footer-title .outline{
+  color:transparent;
+  -webkit-text-stroke:2px var(--paper);
+}
+.footer-links{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem}
+.footer-links .btn{color:var(--ink)}
+.footer-bottom{
+  border-top:2px solid var(--paper);
+  padding-top:1.4rem;
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  font-family:var(--font-mono);font-size:.78rem;
+}
+.footer-bottom a{color:var(--yellow);text-decoration:none}
+.footer-bottom a:hover{text-decoration:underline}
+.footer-dots{position:absolute;top:2.2rem;right:2.2rem;width:108px;height:72px;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Ccircle cx='3' cy='3' r='2' fill='%23F5F5F0'/%3E%3C/svg%3E");
+}
+
+/* ============ 响应式 ============ */
+@media (max-width:860px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero-deco{min-height:240px;order:-1}
+  .resume-grid{grid-template-columns:1fr}
+  .about-card{flex-direction:column}
+}
+@media (max-width:560px){
+  .site-nav{display:none}
+  .section{padding:3.5rem 0}
+}
+
+/* ============ 尊重 prefers-reduced-motion ============ */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+  .reveal{opacity:1;transform:none}
+  .marquee-track{animation:none}
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容 ↓</a>
+<div id="progress" role="progressbar" aria-label="页面阅读进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<!-- ============ 导航 ============ -->
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="返回顶部">
+      <span class="logo-mark" aria-hidden="true"></span>
+      陈哲豪 · 作品集
+    </a>
+    <nav class="site-nav" aria-label="主导航">
+      <ul>
+        <li><a href="#about">简介</a></li>
+        <li><a href="#experience">经历</a></li>
+        <li><a href="#skills">技能</a></li>
+        <li><a href="#works">视频作品</a></li>
+        <li><a href="#contact">联系</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<!-- ============ Hero ============ -->
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="mono reveal" style="font-weight:700;font-size:.85rem;border:var(--bd);background:var(--white);box-shadow:4px 4px 0 #000;display:inline-block;padding:.3rem .9rem;margin-bottom:1.2rem">★ PORTFOLIO — 2026</p>
+      <h1 id="hero-title" class="reveal">你好，我是<br><span class="hl">陈哲豪</span>。<br>Unity / VR 开发工程师。</h1>
+      <p class="sub reveal">浙大宁波理工学院 · 信息与计算机科学。专注于 VR 触觉交互、Unity 3D 虚拟仿真与沉浸式体验开发，从需求分析到测试交付，独立完成全栈开发任务。</p>
+      <div class="hero-cta reveal">
+        <a class="btn btn--yellow" href="#works">
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2 L12 7 L3 12 Z" fill="#0A0A0A"/></svg>
+          看视频作品
+        </a>
+        <a class="btn" href="#about">查看简历 ↓</a>
+      </div>
+    </div>
+
+    <div class="hero-deco reveal" aria-hidden="true">
+      <div class="deco-box deco-1"></div>
+      <div class="deco-box deco-2"></div>
+      <div class="deco-box deco-3 dots"></div>
+      <svg class="deco-star" viewBox="0 0 72 72"><path d="M36 2 L43 27 L70 27 L48 43 L57 70 L36 53 L15 70 L24 43 L2 27 L29 27 Z" fill="#FFD02F" stroke="#000" stroke-width="3"/></svg>
+      <div class="deco-dots dots"></div>
+      <p class="hero-hello">HELLO WORLD! :)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 跑马灯 -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>UNITY 开发</span><span class="accent">✦</span><span>VR / AR 交互</span><span class="accent">✦</span><span>C# / .NET</span><span class="accent">✦</span><span>URP 渲染管线</span><span class="accent">✦</span><span>3D 虚拟仿真</span><span class="accent">✦</span><span>触觉反馈系统</span><span class="accent">✦</span>
+    <span>UNITY 开发</span><span class="accent">✦</span><span>VR / AR 交互</span><span class="accent">✦</span><span>C# / .NET</span><span class="accent">✦</span><span>URP 渲染管线</span><span class="accent">✦</span><span>3D 虚拟仿真</span><span class="accent">✦</span><span>触觉反馈系统</span><span class="accent">✦</span>
+  </div>
+</div>
+
+<!-- ============ 简历展示区 ============ -->
+<section class="section" id="about" aria-labelledby="about-title">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="kicker">01 / RESUME</p>
+      <h2 id="about-title">简历展示</h2>
+      <div class="stripe-bar" aria-hidden="true"></div>
+    </div>
+
+    <div class="resume-grid">
+      <!-- 个人简介 -->
+      <article class="card resume-card resume-card--wide about-card reveal" aria-labelledby="about-card-title">
+        <div class="avatar" role="img" aria-label="陈哲豪的卡通头像">
+          <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
+            <circle cx="36" cy="30" r="16" fill="#F5F5F0" stroke="#000" stroke-width="3"/>
+            <path d="M12 66 C12 50 24 46 36 46 C48 46 60 50 60 66 Z" fill="#F5F5F0" stroke="#000" stroke-width="3"/>
+            <circle cx="30" cy="28" r="2.5" fill="#0A0A0A"/><circle cx="42" cy="28" r="2.5" fill="#0A0A0A"/>
+            <path d="M31 36 Q36 40 41 36" stroke="#0A0A0A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div style="flex:1">
+          <h3 id="about-card-title">
+            <span class="card-chip" style="background:var(--yellow)" aria-hidden="true">
+              <svg viewBox="0 0 18 18"><circle cx="9" cy="6" r="3.5" fill="none" stroke="#000" stroke-width="2"/><path d="M2 16 C2 11 5 10 9 10 C13 10 16 11 16 16" fill="none" stroke="#000" stroke-width="2"/></svg>
+            </span>
+            个人简介
+          </h3>
+          <p>精通 Unity 引擎开发，掌握 C# 编程及 URP 渲染管线，熟悉主流 VR SDK（OpenXR、SteamVR 等），具备虚拟现实高沉浸感交互开发能力。深入研究 VR 触觉模拟技术，熟悉软硬件交互对接。曾主导并参与多个虚拟展厅与 VR 项目全流程开发，获程序设计竞赛奖项。</p>
+          <div class="about-facts">
+            <span class="tag">📍 宁波</span>
+            <span class="tag" style="background:var(--cyan)">本科 · 信息与计算机科学</span>
+            <span class="tag" style="background:var(--pink)">2 年经验</span>
+            <span class="tag" style="background:var(--lime)">求职意向：Unity 开发 / VR 开发</span>
+            <span class="tag" style="background:var(--violet)">英语六级</span>
+          </div>
+        </div>
+        <div class="corner-dots dots" aria-hidden="true"></div>
+      </article>
+
+      <!-- 教育背景 -->
+      <article class="card resume-card reveal" id="education" aria-labelledby="edu-title">
+        <h3 id="edu-title">
+          <span class="card-chip" style="background:var(--cyan)" aria-hidden="true">
+            <svg viewBox="0 0 18 18"><path d="M9 2 L17 6 L9 10 L1 6 Z" fill="none" stroke="#000" stroke-width="2" stroke-linejoin="round"/><path d="M4 8 L4 13 C4 14.5 6.5 15.5 9 15.5 C11.5 15.5 14 14.5 14 13 L14 8" fill="none" stroke="#000" stroke-width="2"/></svg>
+          </span>
+          教育背景
+        </h3>
+        <ul class="timeline">
+          <li>
+            <span class="date">2023.09 — 至今</span>
+            <h4>浙大宁波理工学院 · 本科</h4>
+            <p>信息与计算机科学专业。获一等奖学金、校级优秀毕业生、优秀毕业设计。</p>
+            <p>2023 年获「中国高校计算机大赛 - 团体程序设计天梯赛」全国总决赛「沧海竞舟」组团体三等奖。</p>
+          </li>
+        </ul>
+        <div class="corner-dots dots" aria-hidden="true"></div>
+      </article>
+
+      <!-- 实习经历 -->
+      <article class="card resume-card reveal" id="experience" aria-labelledby="exp-title">
+        <h3 id="exp-title">
+          <span class="card-chip" style="background:var(--pink)" aria-hidden="true">
+            <svg viewBox="0 0 18 18"><rect x="2" y="5" width="14" height="10" fill="none" stroke="#000" stroke-width="2"/><path d="M6 5 L6 3.5 C6 2.7 6.7 2 7.5 2 L10.5 2 C11.3 2 12 2.7 12 3.5 L12 5" fill="none" stroke="#000" stroke-width="2"/></svg>
+          </span>
+          实习经历
+        </h3>
+        <ul class="timeline">
+          <li>
+            <span class="date">2024.08 — 2026.06</span>
+            <h4>温州创创魔法科技有限公司<span class="role">测试工程师</span></h4>
+            <p><strong>虚拟校园游览系统开发：</strong>作为核心开发者，独立运用 Unity 完成校园场景构建及高沉浸交互功能设计，通过光影烘焙技术与射线/碰撞检测算法精准复现真实校园环境，用户沉浸感与交互体验满意度提升 40%。</p>
+            <p><strong>3D 游戏全栈开发：</strong>担任主程序员，独立完成游戏场景搭建、角色控制系统（Character Controller）开发及关卡逻辑设计，通过性能优化确保游戏在多平台稳定 60 帧运行。</p>
+          </li>
+        </ul>
+        <div class="corner-dots dots" aria-hidden="true"></div>
+      </article>
+
+      <!-- 项目经历 -->
+      <article class="card resume-card resume-card--wide reveal" id="projects" aria-labelledby="proj-title">
+        <h3 id="proj-title">
+          <span class="card-chip" style="background:var(--violet)" aria-hidden="true">
+            <svg viewBox="0 0 18 18"><path d="M2 3 L8 3 L9.5 5 L16 5 L16 15 L2 15 Z" fill="none" stroke="#000" stroke-width="2" stroke-linejoin="round"/><path d="M6 9.5 L8 11.5 L12 7.5" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          项目经历
+        </h3>
+        <ul class="timeline">
+          <li>
+            <span class="date">2025.09 — 至今</span>
+            <h4>基于 VR 的触觉模拟交互反馈系统<span class="role">Unity 开发工程师</span></h4>
+            <p>为解决虚拟现实中「看得到摸不到」的痛点，自主开发结合 VR 手套物理反馈的触觉模拟实验系统。利用 Unity 物理引擎开发高精度碰撞检测与变形计算算法，模拟金属、木材、橡胶等不同材质的物理触感；编写硬件通信接口（串口/蓝牙），实时将碰撞压力数据转化为频率、振幅不同的震动控制信号反馈给触觉硬件设备；设计触觉、抓取、雕刻等多个测试 Demo，体验者沉浸感评分提升 45% 以上。</p>
+          </li>
+          <li>
+            <span class="date">2026.03 — 2026.06</span>
+            <h4>基于 Unity 的系列化 3D 交互式教学课件系统<span class="role">Unity 开发工程师</span></h4>
+            <p>独立开发多款面向初中物理/地理的 3D 交互式课件，以高自由度交互解决传统课堂抽象知识可视化难题。物理《凸透镜成像》课件：自研光路追踪算法与蜡烛/光屏拖拽吸附逻辑，生动模拟光线折射、凸透镜成像规律；地理《板块运动与火山地震带》课件：独立开发 5 大教学场景、7 大系统（流程控制、拖拽拼图、运动模拟、AI 问答预留等）；地理《等高线教学游戏》：构建 3D 地形沙盘，设计 WASD 移动、NPC 对话、答题校验、「蝴蝶引路」与「路线选择」核心玩法，打造闭环式通关教学。</p>
+          </li>
+          <li>
+            <span class="date">2024.08 — 2026.06</span>
+            <h4>跨境开发与多终端软件系统 HLMAPP<span class="role">测试工程师</span></h4>
+            <p>参与面向海外客户的跨境多终端敏捷开发与维护，配合资深游戏研发与美工团队进行版本快速迭代。负责多平台（Android/iOS/Web）的功能性测试、API 接口测试与集成测试，编写测试用例并跟踪 Bug 生命周期；协助部分 API 接口开发与网络模块联调；参与日常跨国远程技术例会，进行需求对齐与高效双语（中英）Bug 反馈，保障项目高质量按时交付。</p>
+          </li>
+        </ul>
+        <div class="corner-dots dots" aria-hidden="true"></div>
+      </article>
+
+      <!-- 校园实践 -->
+      <article class="card resume-card reveal" aria-labelledby="campus-title">
+        <h3 id="campus-title">
+          <span class="card-chip" style="background:var(--lime)" aria-hidden="true">
+            <svg viewBox="0 0 18 18"><path d="M9 1.5 L11 6 L16 6.5 L12.5 10 L13.5 15 L9 12.5 L4.5 15 L5.5 10 L2 6.5 L7 6 Z" fill="none" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </span>
+          校园实践
+        </h3>
+        <ul class="timeline">
+          <li>
+            <span class="date">2026.01 — 至今</span>
+            <h4>省级大学生创业创新训练计划</h4>
+            <p>主导 Unity3D 虚拟仿真项目开发，设计并实现交互式场景构建，通过资源管理与代码优化，成功降低项目内存占用 15%，获省级立项资助。</p>
+          </li>
+          <li>
+            <span class="date">2026.01 — 至今</span>
+            <h4>「互联网+」大赛项目实践</h4>
+            <p>担任 Unity 开发主力，负责从原型设计到成品落地的全流程开发，创新采用 ECS 架构提升项目可扩展性，实现多平台适配，项目获校级金奖并推荐至省赛。</p>
+          </li>
+        </ul>
+        <div class="corner-dots dots" aria-hidden="true"></div>
+      </article>
+
+      <!-- 研究经历 -->
+      <article class="card resume-card reveal" aria-labelledby="research-title">
+        <h3 id="research-title">
+          <span class="card-chip" style="background:var(--yellow)" aria-hidden="true">
+            <svg viewBox="0 0 18 18"><path d="M7 2 L11 2 L11 7 L15 14 C15.6 15.4 14.8 16.5 13.4 16.5 L4.6 16.5 C3.2 16.5 2.4 15.4 3 14 L7 7 Z" fill="none" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/><path d="M5.5 12 L12.5 12" stroke="#000" stroke-width="1.8"/></svg>
+          </span>
+          研究经历
+        </h3>
+        <ul class="timeline">
+          <li>
+            <span class="date">2025.10 — 至今</span>
+            <h4>VR 虚拟面料研究<span class="role">VR 开发工程师</span></h4>
+            <p>导师领衔的重点学术科研项目，探索虚拟现实中力觉（Force）、热觉（Thermal）及纹理摩擦力（Friction）多模态触觉渲染技术，解决传统 VR 交互缺乏真实物理触感的痛点。基于 SteamVR 串流方案，打通 HTC Vive Focus 3 一体机与 TouchDIVER Pro 多模态触觉手套在 Unity 场景中的低延迟数据通信链路，实现头显定位与触觉感知的空间高精度同步；调用 WEART SDK 实现多关节手部模型（Hand Skeleton）的高精度运动学驱动；利用头显自带的手势追踪（Hand Tracking）技术，自研无手柄（Controller-free）的免触手势寻路与场景移动方向控制。</p>
+          </li>
+        </ul>
+        <div class="corner-dots dots" aria-hidden="true"></div>
+      </article>
+
+      <!-- 技能 -->
+      <article class="card resume-card resume-card--wide skills-card reveal" id="skills" aria-labelledby="skills-title">
+        <h3 id="skills-title">
+          <span class="card-chip" style="background:var(--lime)" aria-hidden="true">
+            <svg viewBox="0 0 18 18"><path d="M10 1 L3 10 L8 10 L7 17 L15 7 L10 7 Z" fill="none" stroke="#000" stroke-width="2" stroke-linejoin="round"/></svg>
+          </span>
+          技能矩阵
+        </h3>
+        <div class="skill-group">
+          <h4>开发引擎 / Engine</h4>
+          <div class="skill-tags">
+            <span class="tag">Unity 2020 / 2022 LTS</span><span class="tag">URP 渲染管线</span><span class="tag">物理引擎</span><span class="tag">动画系统</span><span class="tag">UGUI / UI Toolkit</span><span class="tag">ECS 架构</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>开发语言 / Languages</h4>
+          <div class="skill-tags">
+            <span class="tag">C# / .NET</span><span class="tag">C / C++</span><span class="tag">Python</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>VR / AR 技术</h4>
+          <div class="skill-tags">
+            <span class="tag">OpenXR</span><span class="tag">SteamVR</span><span class="tag">Pico SDK</span><span class="tag">WEART SDK</span><span class="tag">空间手势交互</span><span class="tag">Hand Tracking</span><span class="tag">传送机制</span><span class="tag">三维 UI 交互设计</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>证书与其他 / Certificates</h4>
+          <div class="skill-tags">
+            <span class="tag">英语六级 CET-6</span><span class="tag">英语四级 CET-4</span><span class="tag">计算机二级</span><span class="tag">兴趣：电影 · 乒乓球</span>
+          </div>
+        </div>
+        <div class="corner-dots dots" aria-hidden="true"></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 视频作品区 ============ -->
+<section class="section works-section" id="works" aria-labelledby="works-title">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="kicker">02 / VIDEO WORKS</p>
+      <h2 id="works-title">视频作品</h2>
+      <div class="stripe-bar stripe-bar--cyan" aria-hidden="true"></div>
+    </div>
+
+    <!-- 上传面板（本地预览用） -->
+    <div class="upload-panel reveal" id="dropZone">
+      <div class="upload-icon" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 30 30"><path d="M15 21 L15 6 M9 12 L15 5 L21 12" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 25 L26 25" stroke="#000" stroke-width="3" stroke-linecap="round"/></svg>
+      </div>
+      <p class="up-title">本地预览新视频</p>
+      <p class="up-hint">点击按钮选择文件，或将视频拖入此区域 · 支持多选<br>注：此处上传的视频仅在你自己的浏览器中临时可见；想让所有访客看到，请把视频文件放入 videos/ 文件夹并在 videos.js 中登记</p>
+      <label class="btn btn--lime" for="videoInput">
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1 L7 13 M1 7 L13 7" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round"/></svg>
+        选择视频文件
+      </label>
+      <input type="file" id="videoInput" accept="video/*" multiple aria-label="选择要本地预览的视频文件">
+    </div>
+
+    <div class="works-meta reveal">
+      <span class="works-count" id="worksCount" role="status" aria-live="polite">共 0 个作品</span>
+      <span class="mono" style="font-size:.75rem;color:#555">点击卡片上的 ▶ 弹窗播放</span>
+    </div>
+
+    <div class="video-grid" id="videoGrid" aria-live="polite"></div>
+
+    <div class="empty-state reveal" id="emptyState">
+      <svg width="56" height="56" viewBox="0 0 56 56" style="margin:0 auto 1rem" aria-hidden="true">
+        <rect x="4" y="12" width="34" height="28" fill="#A5F3FC" stroke="#000" stroke-width="3"/>
+        <path d="M38 24 L52 14 L52 40 L38 30 Z" fill="#FFB3D9" stroke="#000" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M17 21 L27 26 L17 31 Z" fill="#0A0A0A"/>
+      </svg>
+      <p class="mono">还没有发布视频作品 —— 把 mp4 放入 videos/ 文件夹并在 videos.js 中登记即可</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ 页脚 / 联系 ============ -->
+<footer class="site-footer" id="contact">
+  <div class="wrap">
+    <h2 class="footer-title reveal">有合作或岗位机会？<br><span class="outline">LET'S TALK →</span></h2>
+    <div class="footer-links reveal">
+      <a class="btn btn--yellow" href="mailto:918585617@qq.com">✉ 918585617@qq.com</a>
+      <a class="btn btn--cyan" href="tel:18167297294">☏ 18167297294</a>
+      <a class="btn btn--lime" href="https://github.com/" rel="noopener">GitHub ↗</a>
+      <a class="btn" style="background:var(--pink)" href="#" rel="noopener">Bilibili ↗</a>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year">2026</span> 陈哲豪 · 个人作品集 — 以 Neo-Brutalism 手工打造</span>
+      <a href="#top">回到顶部 ↑</a>
+    </div>
+  </div>
+  <div class="footer-dots" aria-hidden="true"></div>
+</footer>
+
+<!-- ============ 视频播放弹窗 ============ -->
+<dialog class="video-dialog" id="videoDialog" aria-labelledby="dialogTitle">
+  <div class="dialog-head">
+    <h3 id="dialogTitle">视频标题</h3>
+    <button class="dialog-close" id="dialogClose" aria-label="关闭播放窗口">✕</button>
+  </div>
+  <video class="dialog-video" id="dialogVideo" controls playsinline></video>
+  <p class="dialog-desc" id="dialogDesc"></p>
+</dialog>
+
+<!-- 已发布视频清单（在 videos.js 中维护） -->
+<script src="videos.js"></script>
+<script>
+(function(){
+  "use strict";
+  var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- 顶部滚动进度条 ---------- */
+  var progress = document.getElementById("progress");
+  function updateProgress(){
+    var doc = document.documentElement;
+    var max = doc.scrollHeight - window.innerHeight;
+    var pct = max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0;
+    progress.style.width = pct + "%";
+    progress.setAttribute("aria-valuenow", Math.round(pct));
+  }
+  window.addEventListener("scroll", updateProgress, {passive:true});
+  window.addEventListener("resize", updateProgress);
+  updateProgress();
+
+  /* ---------- IntersectionObserver 滚动揭示 ---------- */
+  var revealEls = document.querySelectorAll(".reveal");
+  if (prefersReduced || !("IntersectionObserver" in window)) {
+    revealEls.forEach(function(el){ el.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in");
+          io.unobserve(entry.target);
+        }
+      });
+    }, {threshold: 0.12, rootMargin: "0px 0px -40px 0px"});
+    revealEls.forEach(function(el){ io.observe(el); });
+  }
+
+  /* ---------- 页脚年份 ---------- */
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* ---------- 视频作品：已发布 + 本地预览 ---------- */
+  var input      = document.getElementById("videoInput");
+  var dropZone   = document.getElementById("dropZone");
+  var grid       = document.getElementById("videoGrid");
+  var emptyState = document.getElementById("emptyState");
+  var countLabel = document.getElementById("worksCount");
+  var dialog     = document.getElementById("videoDialog");
+  var dlgVideo   = document.getElementById("dialogVideo");
+  var dlgTitle   = document.getElementById("dialogTitle");
+  var dlgDesc    = document.getElementById("dialogDesc");
+  var dlgClose   = document.getElementById("dialogClose");
+  var count = 0;
+
+  function fmtSize(bytes){
+    if (bytes < 1024*1024) return (bytes/1024).toFixed(0) + " KB";
+    if (bytes < 1024*1024*1024) return (bytes/1024/1024).toFixed(1) + " MB";
+    return (bytes/1024/1024/1024).toFixed(2) + " GB";
+  }
+  function fmtExt(name){
+    var i = name.lastIndexOf(".");
+    return i > -1 ? name.slice(i+1).toUpperCase() : "VIDEO";
+  }
+  function stripExt(name){
+    var i = name.lastIndexOf(".");
+    return i > -1 ? name.slice(0, i) : name;
+  }
+  function refreshState(){
+    countLabel.textContent = "共 " + count + " 个作品";
+    emptyState.style.display = count === 0 ? "" : "none";
+  }
+
+  /* 统一的视频卡片构建
+     opts: { url, title, desc, ext, sizeText, published, deletable, onDelete } */
+  function buildCard(opts){
+    var card = document.createElement("article");
+    card.className = "card video-card";
+
+    var thumb = document.createElement("div");
+    thumb.className = "video-thumb";
+    var preview = document.createElement("video");
+    preview.src = opts.url;
+    preview.muted = true;
+    preview.preload = "metadata";
+    preview.setAttribute("aria-hidden", "true");
+    thumb.appendChild(preview);
+
+    var info = document.createElement("div");
+    info.className = "video-info";
+    var h3 = document.createElement("h3");
+    h3.textContent = opts.title;
+    var p = document.createElement("p");
+    p.textContent = opts.desc || "";
+    if (!opts.published) {   // 本地预览卡片可现场编辑标题简介
+      h3.contentEditable = "true"; h3.spellcheck = false;
+      h3.setAttribute("aria-label", "视频标题（可编辑）");
+      p.contentEditable = "true"; p.spellcheck = false;
+      p.setAttribute("aria-label", "视频简介（可编辑）");
+    }
+
+    var tags = document.createElement("div");
+    tags.className = "video-tags";
+    var t1 = document.createElement("span"); t1.className = "tag"; t1.textContent = opts.ext || "VIDEO";
+    tags.appendChild(t1);
+    if (opts.sizeText) {
+      var t2 = document.createElement("span"); t2.className = "tag"; t2.style.background = "var(--cyan)"; t2.textContent = opts.sizeText;
+      tags.appendChild(t2);
+    }
+    var t3 = document.createElement("span"); t3.className = "tag"; t3.style.background = "var(--yellow)"; t3.textContent = "--:--";
+    tags.appendChild(t3);
+    if (opts.published) {
+      var t4 = document.createElement("span"); t4.className = "tag"; t4.style.background = "var(--lime)"; t4.textContent = "已发布";
+      tags.appendChild(t4);
+    }
+
+    preview.addEventListener("loadedmetadata", function(){
+      var s = Math.round(preview.duration);
+      if (isFinite(s)) {
+        var m = Math.floor(s/60), sec = s%60;
+        t3.textContent = m + ":" + (sec < 10 ? "0" : "") + sec;
+      }
+    });
+
+    if (opts.deletable) {
+      var del = document.createElement("button");
+      del.className = "del-btn";
+      del.type = "button";
+      del.textContent = "✕";
+      del.setAttribute("aria-label", "移除预览：" + opts.title);
+      del.addEventListener("click", function(){
+        if (opts.onDelete) opts.onDelete();
+        card.remove();
+        count--;
+        refreshState();
+      });
+      info.appendChild(del);
+      h3.style.paddingRight = "2.2rem";
+    }
+
+    var playBtn = document.createElement("button");
+    playBtn.className = "play-btn";
+    playBtn.type = "button";
+    playBtn.setAttribute("aria-label", "播放视频：" + opts.title);
+    playBtn.innerHTML = '<span class="play-face" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M7 4 L20 12 L7 20 Z" fill="#0A0A0A"/></svg></span>';
+    thumb.appendChild(playBtn);
+
+    playBtn.addEventListener("click", function(){
+      dlgTitle.textContent = h3.textContent;
+      dlgDesc.textContent = p.textContent;
+      dlgVideo.src = opts.url;
+      if (typeof dialog.showModal === "function") {
+        dialog.showModal();
+        var pr = dlgVideo.play();
+        if (pr && pr.catch) pr.catch(function(){});
+      }
+    });
+
+    info.appendChild(h3); info.appendChild(p); info.appendChild(tags);
+    card.appendChild(thumb); card.appendChild(info);
+    grid.appendChild(card);
+    count++;
+    refreshState();
+  }
+
+  /* 1) 加载已发布视频（videos.js 中的 HOSTED_VIDEOS 清单） */
+  var hosted = Array.isArray(window.HOSTED_VIDEOS) ? window.HOSTED_VIDEOS : [];
+  hosted.forEach(function(v){
+    buildCard({
+      url: v.src,
+      title: v.title || stripExt(v.src.split("/").pop()),
+      desc: v.desc || "",
+      ext: fmtExt(v.src),
+      sizeText: "",
+      published: true,
+      deletable: false
+    });
+  });
+
+  /* 2) 本地预览上传 */
+  function addLocalFile(file){
+    if (!file.type || file.type.indexOf("video/") !== 0) return;
+    var url = URL.createObjectURL(file);
+    buildCard({
+      url: url,
+      title: stripExt(file.name),
+      desc: "点击这里填写作品简介：项目背景、担任角色、技术亮点……",
+      ext: fmtExt(file.name),
+      sizeText: fmtSize(file.size),
+      published: false,
+      deletable: true,
+      onDelete: function(){ URL.revokeObjectURL(url); }
+    });
+  }
+
+  input.addEventListener("change", function(){
+    Array.prototype.forEach.call(input.files, addLocalFile);
+    input.value = "";
+  });
+
+  // 拖拽上传
+  ["dragenter","dragover"].forEach(function(evt){
+    dropZone.addEventListener(evt, function(e){
+      e.preventDefault(); e.stopPropagation();
+      dropZone.classList.add("dragover");
+    });
+  });
+  ["dragleave","drop"].forEach(function(evt){
+    dropZone.addEventListener(evt, function(e){
+      e.preventDefault(); e.stopPropagation();
+      dropZone.classList.remove("dragover");
+    });
+  });
+  dropZone.addEventListener("drop", function(e){
+    if (e.dataTransfer && e.dataTransfer.files) {
+      Array.prototype.forEach.call(e.dataTransfer.files, addLocalFile);
+    }
+  });
+
+  // 弹窗关闭
+  function closeDialog(){
+    dlgVideo.pause();
+    dlgVideo.removeAttribute("src");
+    dlgVideo.load();
+    dialog.close();
+  }
+  dlgClose.addEventListener("click", closeDialog);
+  dialog.addEventListener("click", function(e){
+    if (e.target === dialog) closeDialog();   // 点击背板关闭
+  });
+  dialog.addEventListener("cancel", function(){  // Esc 关闭时同样停掉视频
+    dlgVideo.pause();
+    dlgVideo.removeAttribute("src");
+    dlgVideo.load();
+  });
+
+  refreshState();
+})();
+</script>
+</body>
+</html>
