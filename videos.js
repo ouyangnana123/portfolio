@@ -71,9 +71,6 @@ window.getBilibiliEmbedUrl = function (src, autoplay) {
 
 window.HOSTED_VIDEOS = [
   {
-     src: "videos/project-demo-2026-05-14.mp4",
-    title: "项目演示视频 2026-05-14",
-    desc: "这是unity制作的地理课件",
     src: "bilibili:BV1HfKa6yEDK",
     title: "unity凸透镜成像",
     desc: "这是unity制作的物理实践课件"
