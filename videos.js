@@ -74,6 +74,9 @@ window.HOSTED_VIDEOS = [
     src: "videos/project-demo-2026-05-14.mp4",
     title: "项目演示视频 2026-05-14",
     desc: "项目实操演示（由 Bandicam 录制）。如需替换标题或简介，直接修改这里即可。"
+    src: "videos/project-demo-2026-05-14.mp4",
+    title: "项目演示视频 2026-05-14",
+    desc: "项目实操演示（由 Bandicam 录制）。如需替换标题或简介，直接修改这里即可。"
   }
   /* ── B 站视频示例（取消注释即可使用）──
    * 操作流程：
